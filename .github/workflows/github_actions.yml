@@ -4,8 +4,9 @@ name: Flutter CI
 
 on:
   push:
+    # Sequence of patterns matched against refs/tags
     tags:
-      - "v*.*.*" # on every version tag will build a new android artifact.
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
     
 # on: push    # Default will running for every branch.
     
