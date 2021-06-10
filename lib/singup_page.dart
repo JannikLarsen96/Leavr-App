@@ -81,8 +81,8 @@ class SignupPageState extends State<SignupPage> {
                             TextFormField(
                                 onSaved: (value) => _password = value,
                                 obscureText: true,
-                                decoration:
-                                    const InputDecoration(labelText: "Kodeord")),
+                                decoration: const InputDecoration(
+                                    labelText: "Kodeord")),
                             TextFormField(
                                 onSaved: (value) => _confirmPassword = value,
                                 obscureText: true,

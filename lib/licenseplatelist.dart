@@ -24,7 +24,7 @@ class LicensePlateListState extends State<LicensePlateList> {
             hintText: "Skriv besked",
             hintStyle: TextStyle(color: Colors.black54),
             border: InputBorder.none),
-            autofocus: true,
+        autofocus: true,
         controller: textController,
       ),
       actions: [

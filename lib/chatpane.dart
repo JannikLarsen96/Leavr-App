@@ -9,7 +9,8 @@ class Conversation extends StatefulWidget {
   Conversation(this.id, this.licensePlate, this.title);
 
   @override
-  State<StatefulWidget> createState() => ConversationState(id, licensePlate, title);
+  State<StatefulWidget> createState() =>
+      ConversationState(id, licensePlate, title);
 }
 
 class ConversationState extends State<Conversation> {
@@ -22,21 +23,22 @@ class ConversationState extends State<Conversation> {
   var dataLoaded = false;
   var messages = <ChatMessage>[];
 
-  @override void initState() {
+  @override
+  void initState() {
     super.initState();
 
     loadData();
   }
 
-  loadData() async{
+  loadData() async {
     var apiMessages = await ApiClient.fetchConversation(id);
-  if(!mounted) {
-    return;
-  }
-  setState(() {
-        messages = apiMessages;
-        dataLoaded = true;
-      });
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      messages = apiMessages;
+      dataLoaded = true;
+    });
   }
 
   @override
@@ -64,8 +66,8 @@ class ConversationState extends State<Conversation> {
                   width: 2,
                 ),
                 Text(title,
-                    style:
-                        const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600)),
               ],
             ),
           ),
@@ -74,42 +76,41 @@ class ConversationState extends State<Conversation> {
       body: Stack(
         children: <Widget>[
           FutureBuilder<List<ChatMessage>>(
-      future: ApiClient.fetchConversation(id),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        if(dataLoaded && snapshot.hasData){
-          messages = snapshot.data;
-          return ListView.builder(
-            itemCount: messages.length,
-            itemBuilder: (BuildContext context, int index){
-              return Container(
-                padding:
-                    const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-                child: Align(
-                  alignment: (messages[index].messageType == "receiver"
-                      ? Alignment.topLeft
-                      : Alignment.topRight),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: (messages[index].messageType == "receiver"
-                          ? Colors.grey.shade200
-                          : Colors.blue[200]),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      messages[index].messageContent,
-                      style: const TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ),
-              );
-          },);
-        }
-        else{ 
-          return const Center(child: CircularProgressIndicator());
-        }
-      }
-    ),
+              future: ApiClient.fetchConversation(id),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (dataLoaded && snapshot.hasData) {
+                  messages = snapshot.data;
+                  return ListView.builder(
+                    itemCount: messages.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        padding: const EdgeInsets.only(
+                            left: 14, right: 14, top: 10, bottom: 10),
+                        child: Align(
+                          alignment: (messages[index].messageType == "receiver"
+                              ? Alignment.topLeft
+                              : Alignment.topRight),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: (messages[index].messageType == "receiver"
+                                  ? Colors.grey.shade200
+                                  : Colors.blue[200]),
+                            ),
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              messages[index].messageContent,
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              }),
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(

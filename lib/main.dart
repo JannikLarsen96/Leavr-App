@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import './licenseplatelist.dart';
 import './conversationlist.dart';
-import './auth/authservice.dart'; 
+import './auth/authservice.dart';
 import 'login_page.dart';
-import 'package:provider/provider.dart'; 
+import 'package:provider/provider.dart';
 
-void main() => runApp(
-  ChangeNotifierProvider<AuthService>(
+void main() => runApp(ChangeNotifierProvider<AuthService>(
     child: LeavRApp(),
     create: (BuildContext context) {
-          return AuthService();
-        }
-    ));
+      return AuthService();
+    }));
 
 class LeavRApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: FutureBuilder(
+    return MaterialApp(
+      home: FutureBuilder(
         future: Provider.of<AuthService>(context).getUser(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -25,7 +24,8 @@ class LeavRApp extends StatelessWidget {
             return Container(color: Colors.white);
           }
         },
-      ),);
+      ),
+    );
   }
 }
 
@@ -81,4 +81,3 @@ class LeavRAppHomeState extends State<LeavRAppHome> {
     );
   }
 }
-

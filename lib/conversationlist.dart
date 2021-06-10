@@ -8,25 +8,24 @@ class ConversationList extends StatefulWidget {
 }
 
 class ConversationListState extends State<ConversationList> {
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-      future: ApiClient.fetchConversations(),
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        if(snapshot.hasData){
-          return ListView.builder(
-            itemCount: snapshot.data.length,
-            itemBuilder: (BuildContext context, int index){
+        future: ApiClient.fetchConversations(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (BuildContext context, int index) {
                 return snapshot.data[index];
-          },);
+              },
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
         }
-        else{
-          return const Center(child: CircularProgressIndicator());
-        }
-      }
-      //children: messages,
-    );
+        //children: messages,
+        );
   }
 }
 
