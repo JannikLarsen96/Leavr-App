@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../utils/apiclient.dart';
 
-
 class AuthService with ChangeNotifier {
   var currentUser;
 
