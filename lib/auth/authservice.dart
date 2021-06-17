@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../utils/apiclient.dart';
+
 
 class AuthService with ChangeNotifier {
   var currentUser;
@@ -15,23 +17,11 @@ class AuthService with ChangeNotifier {
     return Future.value(currentUser);
   }
 
-  Future createUser(String email, String password, String confirmPassword) {
-    print('creating user');
-    this.currentUser = {'email': email};
+  Future loginUser(String deviceId) async {
+    var user = await ApiClient.GetUser(deviceId);
+    user ??= await ApiClient.CreateUser(deviceId);
     notifyListeners();
+    currentUser = user;
     return Future.value(currentUser);
-  }
-
-  // logs in the user if password matches
-  Future loginUser(String email, String password) {
-    print('made it to login user');
-    if (password == 'password123') {
-      this.currentUser = {'email': email};
-      notifyListeners();
-      return Future.value(currentUser);
-    } else {
-      this.currentUser = null;
-      return Future.value(null);
-    }
   }
 }

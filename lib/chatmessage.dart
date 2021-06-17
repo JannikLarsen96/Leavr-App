@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-class ChatMessage {
+class ChatMessage{
   String licensePlate;
   String messageContent;
   String messageType;

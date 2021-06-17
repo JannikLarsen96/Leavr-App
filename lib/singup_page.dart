@@ -1,3 +1,4 @@
+/*
 import './auth/authservice.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,6 @@ class SignupPageState extends State<SignupPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(height: 20),
                   Column(
                     children: [
                       Column(
@@ -138,3 +138,4 @@ class SignupPageState extends State<SignupPage> {
     );
   }
 }
+*/
