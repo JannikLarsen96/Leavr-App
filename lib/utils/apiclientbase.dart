@@ -6,9 +6,8 @@ import '../auth/authservice.dart';
 import 'package:flutter/material.dart';
 
 class ApiClientBase {
-
-  static Future<http.Response> get(
-      BuildContext context, Uri url, {Map<String, String>? headers}) async {
+  static Future<http.Response> get(BuildContext context, Uri url,
+      {Map<String, String>? headers}) async {
     var user = await Provider.of<AuthService>(context, listen: false).getUser();
     var token = _getToken(user?.id ?? -1);
 
@@ -22,14 +21,13 @@ class ApiClientBase {
       httpHeaders.addAll(headers);
     }
 
-    var httpResult = await http.get(url,
-        headers: httpHeaders);
+    var httpResult = await http.get(url, headers: httpHeaders);
 
     return httpResult;
   }
 
-  static Future<http.Response> post(
-      BuildContext context, Uri url, {Map<String, String>? headers, Object? body}) async {
+  static Future<http.Response> post(BuildContext context, Uri url,
+      {Map<String, String>? headers, Object? body}) async {
     var user = await Provider.of<AuthService>(context, listen: false).getUser();
     var token = _getToken(user?.id ?? -1);
 
@@ -43,15 +41,13 @@ class ApiClientBase {
       httpHeaders.addAll(headers);
     }
 
-    var httpResult = await http.post(url,
-        headers: httpHeaders,
-        body: body);
+    var httpResult = await http.post(url, headers: httpHeaders, body: body);
 
     return httpResult;
   }
 
-  static Future<http.Response> delete(
-      BuildContext context, Uri url, {Map<String, String>? headers, Object? body}) async {
+  static Future<http.Response> delete(BuildContext context, Uri url,
+      {Map<String, String>? headers, Object? body}) async {
     var user = await Provider.of<AuthService>(context, listen: false).getUser();
     var token = _getToken(user?.id ?? -1);
 
@@ -65,9 +61,7 @@ class ApiClientBase {
       httpHeaders.addAll(headers);
     }
 
-    var httpResult = await http.delete(url,
-        headers: httpHeaders,
-        body: body);
+    var httpResult = await http.delete(url, headers: httpHeaders, body: body);
 
     return httpResult;
   }

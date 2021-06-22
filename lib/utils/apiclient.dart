@@ -67,13 +67,13 @@ class ApiClient {
   }
 
   static Future DeleteVehicle(BuildContext context, String licensePlate) async {
-        var uri = Uri.http('api.leavr.org', 'Vehicle');
+    var uri = Uri.http('api.leavr.org', 'Vehicle');
 
     //TODO: Add error handling
     var response = await ApiClientBase.delete(context, uri,
         body: jsonEncode(AddVehicleModel(licensePlate)));
 
-        var a = 0;
+    var a = 0;
   }
 
   //[{"id":"1","licensePlate":"AB 12 341","messages":[{"messageContent":"Lorem ipsum jada jada","messageType":"receiver"},{"messageContent":"Lorem ipsum jada jada","messageType":"sender"}]}]
@@ -98,7 +98,7 @@ class ApiClient {
     return items;
   }
 
-    static Future<List<ConversationListItem>> fetchConversations() async {
+  static Future<List<ConversationListItem>> fetchConversations() async {
     var uri = Uri.https(apiUrl, 'conversations');
     //TODO: Add error handling
     var httpResult = await http.get(uri);

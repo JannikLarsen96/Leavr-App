@@ -11,15 +11,12 @@ class LicensePlateList extends StatefulWidget {
 }
 
 class LicensePlateListState extends State<LicensePlateList> {
-
   void addLicensePlate(BuildContext context) {
     showAlertDialog(context);
   }
 
-  void _updateView(BuildContext context){
-    setState(() => {
-      build(context)
-    });
+  void _updateView(BuildContext context) {
+    setState(() => {build(context)});
   }
 
   var textController = TextEditingController();
@@ -38,8 +35,8 @@ class LicensePlateListState extends State<LicensePlateList> {
       actions: [
         ElevatedButton(
           child: Text("OK"),
-          onPressed: () async {            
-              await ApiClient.AddVehicle(context, textController.text);
+          onPressed: () async {
+            await ApiClient.AddVehicle(context, textController.text);
             setState(() {
               textController.text = '';
               build(context);
@@ -73,7 +70,9 @@ class LicensePlateListState extends State<LicensePlateList> {
                   itemCount: snapshot.data?.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      child: LicensePlate(snapshot.data?[index].plate ?? '', () => _updateView(context),
+                      child: LicensePlate(
+                          snapshot.data?[index].plate ?? '',
+                          () => _updateView(context),
                           Key(snapshot.data?[index].plate ?? '')),
                     );
                   },
@@ -97,7 +96,6 @@ class LicensePlate extends StatelessWidget {
   final Function update;
 
   LicensePlate(this.licensePlate, this.update, Key key) : super(key: key);
-  
 
   @override
   Widget build(BuildContext context) {
@@ -123,20 +121,23 @@ class LicensePlate extends StatelessWidget {
       style: ElevatedButton.styleFrom(primary: Colors.red),
       onPressed: () async {
         await _deleteVehicle(context);
-        update();        
+        update();
         Navigator.pop(context);
       },
     );
     Widget cancelButton = TextButton(
       child: Text("Fortryd"),
-      onPressed: () {Navigator.pop(context);},
+      onPressed: () {
+        Navigator.pop(context);
+      },
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Er du sikker?"),
-      content: Text(
-          "Er du sikker på, at du vil slette køretøjet " + licensePlate + " fra din konto?"),
+      content: Text("Er du sikker på, at du vil slette køretøjet " +
+          licensePlate +
+          " fra din konto?"),
       actions: [
         cancelButton,
         continueButton,
