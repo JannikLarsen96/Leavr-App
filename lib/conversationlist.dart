@@ -11,7 +11,7 @@ class ConversationListState extends State<ConversationList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-        future: ApiClient.fetchConversations(),
+        future: ApiClient.fetchConversations(context),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
@@ -38,8 +38,12 @@ class ConversationListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const Icon(Icons.message),
-      title: Text(message),
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const <Widget>[Icon(Icons.message)],
+      ),
+      title: Text(licensePlate),
+      subtitle: Text(message),
       onTap: () {
         Navigator.push(
           context,
