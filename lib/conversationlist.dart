@@ -29,11 +29,20 @@ class ConversationListState extends State<ConversationList> {
   }
 }
 
-class ConversationListItem extends StatelessWidget {
+class ConversationListItem extends StatefulWidget {
   String message;
   String licensePlate;
   int id;
   ConversationListItem(this.id, this.licensePlate, this.message);
+  @override
+  State<StatefulWidget> createState() => ConversationListItemState(id, licensePlate, message);
+}
+
+class ConversationListItemState extends State<ConversationListItem> {
+  String message;
+  String licensePlate;
+  int id;
+  ConversationListItemState(this.id, this.licensePlate, this.message);
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +54,11 @@ class ConversationListItem extends StatelessWidget {
       title: Text(licensePlate),
       subtitle: Text(message),
       onTap: () {
-        Navigator.push(
-          context,
+        Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => Conversation(id, licensePlate, licensePlate),
           ),
-        );
+        ).then((value) => setState(() {message = value;}));
       },
     );
   }

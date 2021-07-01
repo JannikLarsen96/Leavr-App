@@ -19,10 +19,12 @@ class ConversationState extends State<Conversation> {
   final int id;
   ConversationState(this.id, this.licensePlate, this.title);
   final textController = TextEditingController();
+  final _scrollController = ScrollController();
 
   var dataLoaded = false;
   var messages = <ChatMessage>[];
 
+  String latestMessage = '';
   @override
   void initState() {
     super.initState();
@@ -55,7 +57,7 @@ class ConversationState extends State<Conversation> {
               children: <Widget>[
                 IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pop(context, latestMessage);
                   },
                   icon: const Icon(
                     Icons.arrow_back,
@@ -74,6 +76,7 @@ class ConversationState extends State<Conversation> {
         ),
       ),
       body: Stack(
+        
         children: <Widget>[
           FutureBuilder<List<ChatMessage>>(
               future: ApiClient.getMessages(context, id),
@@ -81,6 +84,7 @@ class ConversationState extends State<Conversation> {
                 if (dataLoaded && snapshot.hasData) {
                   messages = snapshot.data;
                   return ListView.builder(
+                    controller: _scrollController,
                     itemCount: messages.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
@@ -155,11 +159,13 @@ class ConversationState extends State<Conversation> {
                     onPressed: () async {
                       await ApiClient.sendMessage(
                           context, id, textController.text);
+                      latestMessage = textController.text;
                       setState(() {
                         messages.add(ChatMessage(
                             licensePlate, textController.text, true));
                       });
                       textController.text = '';
+                      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
                     },
                     child: const Icon(
                       Icons.send,
