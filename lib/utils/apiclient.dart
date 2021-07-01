@@ -13,7 +13,7 @@ import 'apiclientbase.dart';
 class ApiClient {
   static const String apiUrl = '60ba42d25cf7140017696e85.mockapi.io';
 
-  static Future<User?> GetUser(String appIdentifier) async {
+  static Future<User?> getUser(String appIdentifier) async {
     var queryParameters = {'appIdentifier': appIdentifier};
 
     var uri = Uri.http('api.leavr.org', 'User/appIdentifier', queryParameters);
@@ -34,12 +34,12 @@ class ApiClient {
         DateTime.parse(jsonResult['createdAt']));
   }
 
-  static Future<User?> CreateUser(String appIdentifier) async {
+  static Future<User?> createUser(String appIdentifier) async {
     var queryParameters = {'appIdentifier': appIdentifier};
     var uri = Uri.http('api.leavr.org', 'User', queryParameters);
     //TODO: Add error handling
     var httpResult = await http.post(uri);
-    return GetUser(appIdentifier);
+    return getUser(appIdentifier);
   }
 
   static Future<List<Vehicle>> getVehicles(BuildContext context) async {
@@ -58,7 +58,7 @@ class ApiClient {
     return items;
   }
 
-  static Future AddVehicle(BuildContext context, String licensePlate) async {
+  static Future addVehicle(BuildContext context, String licensePlate) async {
     var uri = Uri.http('api.leavr.org', 'Vehicle');
 
     //TODO: Add error handling
@@ -66,42 +66,48 @@ class ApiClient {
         body: jsonEncode(AddVehicleModel(licensePlate)));
   }
 
-  static Future DeleteVehicle(BuildContext context, String licensePlate) async {
+  static Future deleteVehicle(BuildContext context, String licensePlate) async {
     var uri = Uri.http('api.leavr.org', 'Vehicle');
 
     //TODO: Add error handling
-    var response = await ApiClientBase.delete(context, uri,
+    await ApiClientBase.delete(context, uri,
         body: jsonEncode(AddVehicleModel(licensePlate)));
-
-    var a = 0;
   }
 
-  //[{"id":"1","licensePlate":"AB 12 341","messages":[{"messageContent":"Lorem ipsum jada jada","messageType":"receiver"},{"messageContent":"Lorem ipsum jada jada","messageType":"sender"}]}]
-  static Future<List<ChatMessage>> fetchConversation(int id) async {
-    var idString = id.toString();
+  static Future sendMessage(
+      BuildContext context, int conversationId, String content) async {
+    var uri = Uri.http('api.leavr.org', 'Message');
 
-    var uri = Uri.https(apiUrl, 'conversation', {'id': idString});
     //TODO: Add error handling
-    var httpResult = await http.get(uri);
+    await ApiClientBase.post(context, uri,
+        body: jsonEncode(SendMessageModel(conversationId, content)));
+  }
 
-    List<dynamic> jsonResult = json.decode(httpResult.body);
+  static Future<List<ChatMessage>> getMessages(
+      BuildContext context, int id) async {
+    var uri =
+        Uri.http('api.leavr.org', 'Message', {'conversationId': id.toString()});
+    //TODO: Add error handling
+    var httpResult = await ApiClientBase.get(context, uri);
+
+    dynamic jsonResult = json.decode(httpResult.body);
 
     List<ChatMessage> items = <ChatMessage>[];
 
-    var licensePlate = jsonResult[0]['licensePlate'];
+    var licensePlate = jsonResult['plate'];
 
-    for (var item in jsonResult[0]['messages']) {
-      items.add(ChatMessage(
-          licensePlate, item["messageContent"], item["messageType"]));
+    for (var item in jsonResult['messages']) {
+      items.add(ChatMessage(licensePlate, item["content"], item["isSender"]));
     }
 
     return items;
   }
 
-  static Future<List<ConversationListItem>> fetchConversations() async {
-    var uri = Uri.https(apiUrl, 'conversations');
+  static Future<List<ConversationListItem>> fetchConversations(
+      BuildContext context) async {
+    var uri = Uri.http('api.leavr.org', 'Conversation');
     //TODO: Add error handling
-    var httpResult = await http.get(uri);
+    var httpResult = await ApiClientBase.get(context, uri);
 
     List<dynamic> jsonResult = json.decode(httpResult.body);
 
@@ -109,9 +115,8 @@ class ApiClient {
 
     for (var item in jsonResult) {
       items.add(ConversationListItem(
-          int.parse(item["id"]), item["licensePlate"], item["subject"]));
+          item['id'], item['plate'], item['latestMessage']));
     }
-
     return items;
   }
 }
@@ -121,4 +126,13 @@ class AddVehicleModel {
   AddVehicleModel(this.plate);
 
   Map<String, dynamic> toJson() => {'plate': plate};
+}
+
+class SendMessageModel {
+  int conversationId;
+  String content;
+  SendMessageModel(this.conversationId, this.content);
+
+  Map<String, dynamic> toJson() =>
+      {'conversationId': conversationId, 'content': content};
 }

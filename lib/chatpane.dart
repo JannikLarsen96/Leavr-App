@@ -27,11 +27,11 @@ class ConversationState extends State<Conversation> {
   void initState() {
     super.initState();
 
-    loadData();
+    loadData(context);
   }
 
-  loadData() async {
-    var apiMessages = await ApiClient.fetchConversation(id);
+  loadData(BuildContext context) async {
+    var apiMessages = await ApiClient.getMessages(context, id);
     if (!mounted) {
       return;
     }
@@ -76,7 +76,7 @@ class ConversationState extends State<Conversation> {
       body: Stack(
         children: <Widget>[
           FutureBuilder<List<ChatMessage>>(
-              future: ApiClient.fetchConversation(id),
+              future: ApiClient.getMessages(context, id),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (dataLoaded && snapshot.hasData) {
                   messages = snapshot.data;
@@ -87,13 +87,13 @@ class ConversationState extends State<Conversation> {
                         padding: const EdgeInsets.only(
                             left: 14, right: 14, top: 10, bottom: 10),
                         child: Align(
-                          alignment: (messages[index].messageType == "receiver"
+                          alignment: (!messages[index].isSender
                               ? Alignment.topLeft
                               : Alignment.topRight),
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: (messages[index].messageType == "receiver"
+                              color: (!messages[index].isSender
                                   ? Colors.grey.shade200
                                   : Colors.blue[200]),
                             ),
@@ -152,10 +152,12 @@ class ConversationState extends State<Conversation> {
                     width: 15,
                   ),
                   FloatingActionButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      await ApiClient.sendMessage(
+                          context, id, textController.text);
                       setState(() {
                         messages.add(ChatMessage(
-                            licensePlate, textController.text, 'sender'));
+                            licensePlate, textController.text, true));
                       });
                       textController.text = '';
                     },
