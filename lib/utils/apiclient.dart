@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../conversationlist.dart';
 import '../chatmessage.dart';
+import '../models/user.dart';
 
 class ApiClient {
   static const String apiUrl = '60ba42d25cf7140017696e85.mockapi.io';
@@ -21,6 +22,37 @@ class ApiClient {
     }
 
     return items;
+  }
+
+  static Future<User?> GetUser(String appIdentifier) async {
+    var queryParameters = {'appIdentifier': appIdentifier};
+
+    var uri = Uri.http('api.leavr.org', 'User/appIdentifier', queryParameters);
+
+    var httpResult = await http.get(uri);
+
+    if (httpResult.statusCode == 404) {
+      print('no user found, creating');
+      return null;
+    }
+
+    dynamic jsonResult = json.decode(httpResult.body);
+
+    return User(
+        jsonResult['id'],
+        jsonResult['appIdentifier'],
+        jsonResult['maxVehicles'],
+        jsonResult['isDeleted'],
+        DateTime.parse(jsonResult['createdAt']));
+  }
+
+  static Future<User?> CreateUser(String appIdentifier) async {
+    var queryParameters = {'appIdentifier': appIdentifier};
+    var uri = Uri.http('api.leavr.org', 'User', queryParameters);
+
+    var httpResult = await http.post(uri);
+    print('Created user');
+    return GetUser(appIdentifier);
   }
 
 //[{"id":"1","licensePlate":"AB 12 341","messages":[{"messageContent":"Lorem ipsum jada jada","messageType":"receiver"},{"messageContent":"Lorem ipsum jada jada","messageType":"sender"}]}]
