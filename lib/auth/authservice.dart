@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../utils/apiclient.dart';
+import '../models/user.dart';
 
 class AuthService with ChangeNotifier {
-  var currentUser;
+  User? currentUser;
 
-  Future getUser() {
+  Future<User?> getUser() {
     return Future.value(currentUser);
   }
 
   // wrappinhg the firebase calls
   Future logout() {
-    this.currentUser = null;
+    currentUser = null;
     notifyListeners();
     return Future.value(currentUser);
   }
