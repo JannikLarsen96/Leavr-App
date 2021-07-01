@@ -18,8 +18,8 @@ class AuthService with ChangeNotifier {
   }
 
   Future loginUser(String deviceId) async {
-    var user = await ApiClient.GetUser(deviceId);
-    user ??= await ApiClient.CreateUser(deviceId);
+    var user = await ApiClient.getUser(deviceId);
+    user ??= await ApiClient.createUser(deviceId);
     notifyListeners();
     currentUser = user;
     return Future.value(currentUser);

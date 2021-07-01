@@ -1,6 +1,6 @@
 class ChatMessage {
   String licensePlate;
   String messageContent;
-  String messageType;
-  ChatMessage(this.licensePlate, this.messageContent, this.messageType);
+  bool isSender;
+  ChatMessage(this.licensePlate, this.messageContent, this.isSender);
 }

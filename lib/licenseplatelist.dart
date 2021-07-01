@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leavr_app/components/licenseplatetextbox.dart';
 import 'utils/apiclient.dart';
 import 'models/vehicle.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -24,19 +25,12 @@ class LicensePlateListState extends State<LicensePlateList> {
   showAlertDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
       title: Text("Tilføj nummerplade"),
-      content: TextField(
-        decoration: InputDecoration(
-            hintText: "Skriv besked",
-            hintStyle: TextStyle(color: Colors.black54),
-            border: InputBorder.none),
-        autofocus: true,
-        controller: textController,
-      ),
+      content: LicensePlateTextBox(textController),
       actions: [
         ElevatedButton(
           child: Text("OK"),
           onPressed: () async {
-            await ApiClient.AddVehicle(context, textController.text);
+            await ApiClient.addVehicle(context, textController.text);
             setState(() {
               textController.text = '';
               build(context);
@@ -154,6 +148,6 @@ class LicensePlate extends StatelessWidget {
   }
 
   Future _deleteVehicle(BuildContext context) async {
-    await ApiClient.DeleteVehicle(context, licensePlate);
+    await ApiClient.deleteVehicle(context, licensePlate);
   }
 }
