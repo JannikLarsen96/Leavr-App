@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leavr_app/components/startconversationtextbox.dart';
 import 'utils/apiclient.dart';
 import './chatpane.dart';
 
@@ -8,24 +9,65 @@ class ConversationList extends StatefulWidget {
 }
 
 class ConversationListState extends State<ConversationList> {
+  void startConversation(BuildContext context) {
+    showAlertDialog(context);
+  }
+
+  var textController = TextEditingController();
+
+  showAlertDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      title: Text("Indtast nummerplade på modtagers køretøj"),
+      content: StartConversationTextBox(textController),
+      actions: [
+        ElevatedButton(
+          child: Text("Start samtale"),
+          onPressed: () async {
+            // await ApiClient.startConversation(context, textController.text);
+            setState(() {
+              textController.text = '';
+              build(context);
+            });
+
+            Navigator.pop(context);
+          },
+        )
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-        future: ApiClient.fetchConversations(context),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return snapshot.data[index];
-              },
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
+      future: ApiClient.fetchConversations(context),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+            body: Stack(
+              children: <Widget>[
+                ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return snapshot.data[index];
+                    }),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+                onPressed: () => startConversation(context),
+                child: Icon(Icons.add)),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
         }
-        //children: messages,
-        );
+      },
+    );
   }
 }
 
@@ -35,7 +77,8 @@ class ConversationListItem extends StatefulWidget {
   int id;
   ConversationListItem(this.id, this.licensePlate, this.message);
   @override
-  State<StatefulWidget> createState() => ConversationListItemState(id, licensePlate, message);
+  State<StatefulWidget> createState() =>
+      ConversationListItemState(id, licensePlate, message);
 }
 
 class ConversationListItemState extends State<ConversationListItem> {
@@ -54,11 +97,16 @@ class ConversationListItemState extends State<ConversationListItem> {
       title: Text(licensePlate),
       subtitle: Text(message),
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => Conversation(id, licensePlate, licensePlate),
-          ),
-        ).then((value) => setState(() {message = value;}));
+        Navigator.of(context)
+            .push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    Conversation(id, licensePlate, licensePlate),
+              ),
+            )
+            .then((value) => setState(() {
+                  message = value;
+                }));
       },
     );
   }

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:leavr_app/components/text/licenseplatetextformatter.dart';
 
-class LicensePlateTextBox extends StatelessWidget {
+class StartConversationTextBox extends StatelessWidget {
   TextEditingController textController;
 
-  LicensePlateTextBox(this.textController);
+  StartConversationTextBox(this.textController);
 
   @override
   Widget build(BuildContext context) {
